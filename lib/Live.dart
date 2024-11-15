@@ -4,6 +4,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_background/flutter_background.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'PrisonerListPage.dart';
 
 // void main() {
@@ -22,6 +23,8 @@ import 'PrisonerListPage.dart';
 //     );
 //   }
 // }
+
+String apiUrl = dotenv.env['API_URL'] ?? '';
 
 class LocationTrackingScreen extends StatefulWidget {
   @override
@@ -79,7 +82,7 @@ class LocationTracker {
   }
 
   void initSocket() {
-    socket = IO.io('https://zn3lffjl-7000.inc1.devtunnels.ms/', <String, dynamic>{
+    socket = IO.io(apiUrl, <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': true,
     });

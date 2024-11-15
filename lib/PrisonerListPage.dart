@@ -1,10 +1,13 @@
 import 'dart:convert';
 import 'dart:ffi';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 import 'Live.dart';
+
+String apiUrl = dotenv.env['API_URL'] ?? '';
 
 class PrisonerListPage extends StatefulWidget {
   @override
@@ -43,7 +46,7 @@ class _PrisonerListPageState extends State<PrisonerListPage> {
   // Fetch prisoners from API
   Future<void> _fetchPrisoners(BuildContext context) async {
     final response = await http.get(Uri.parse(
-        'https://zn3lffjl-7000.inc1.devtunnels.ms/api/v1/prisoner/all?page=1&limit=20'));
+        '$apiUrl/api/v1/prisoner/mobile/all?page=1&limit=20'));
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
@@ -120,7 +123,7 @@ class _PrisonerListPageState extends State<PrisonerListPage> {
   //Add tracking devices using API
   Future<void> _addTrackingDevice(String trackingId) async {
     final response = await http.post(
-      Uri.parse('https://zn3lffjl-7000.inc1.devtunnels.ms/api/v1/device/add'),
+      Uri.parse('$apiUrl/api/v1/device/add'),
       headers: {'Content-Type': 'application/json'},
       body: json.encode({'device_id': trackingId, 'assigned_to': 'Prisoner'}),
     );
@@ -138,7 +141,7 @@ class _PrisonerListPageState extends State<PrisonerListPage> {
       int prisonerId, String trackingId) async {
     final response = await http.put(
       Uri.parse(
-          'https://zn3lffjl-7000.inc1.devtunnels.ms/api/v1/prisoner/update/$prisonerId'),
+          '$apiUrl/api/v1/prisoner/update/$prisonerId'),
       headers: {'Content-Type': 'application/json'},
       body: json.encode({
         'tracking_device_id': trackingId,
