@@ -24,7 +24,8 @@ import 'PrisonerListPage.dart';
 //   }
 // }
 
-String apiUrl = dotenv.env['API_URL'] ?? '';
+String apiUrl =
+    'https://zn3lffjl-7000.inc1.devtunnels.ms';
 
 class LocationTrackingScreen extends StatefulWidget {
   @override
@@ -51,15 +52,66 @@ class _LocationTrackingScreenState extends State<LocationTrackingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Location Tracker")),
-      body: Center(
-        child: Text(
-          _currentPosition,
-          style: TextStyle(fontSize: 20),
+      appBar: AppBar(
+        title: Text(
+          "Location Tracker",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.teal,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.location_on,
+              color: Colors.teal,
+              size: 60,
+            ),
+            SizedBox(height: 20),
+            Text(
+              "Your Current Location:",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            SizedBox(height: 15),
+            Container(
+              padding: EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.teal.shade50,
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: Colors.teal.shade200,
+                  width: 1.5,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.teal.withOpacity(0.2),
+                    blurRadius: 6,
+                    spreadRadius: 1,
+                  ),
+                ],
+              ),
+              child: Text(
+                _currentPosition,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.teal.shade800,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
+
 
   @override
   void dispose() {

@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 import 'Live.dart';
 
-String apiUrl = dotenv.env['API_URL'] ?? '';
+String apiUrl = 'https://zn3lffjl-7000.inc1.devtunnels.ms';
 
 class PrisonerListPage extends StatefulWidget {
   @override
@@ -64,19 +64,55 @@ class _PrisonerListPageState extends State<PrisonerListPage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Error'),
-            content: Text('Failed to fetch prisoners. Please try again later.'),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15.0),
+            ),
+            title: Row(
+              children: [
+                Icon(Icons.error_outline, color: Colors.red),
+                SizedBox(width: 8.0),
+                Text(
+                  'Error',
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18.0,
+                  ),
+                ),
+              ],
+            ),
+            content: Text(
+              'Failed to fetch prisoners. Please try again later.',
+              style: TextStyle(
+                fontSize: 16.0,
+                color: Colors.black87,
+              ),
+            ),
             actions: <Widget>[
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop(); // Close the dialog
                 },
-                child: Text('OK'),
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.blueGrey,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+                child: Text(
+                  'OK',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ],
           );
         },
       );
+
     }
   }
 
@@ -141,7 +177,7 @@ class _PrisonerListPageState extends State<PrisonerListPage> {
       int prisonerId, String trackingId) async {
     final response = await http.put(
       Uri.parse(
-          '$apiUrl/api/v1/prisoner/update/$prisonerId'),
+          '$apiUrl/api/v1/prisoner/mobile/update/$prisonerId'),
       headers: {'Content-Type': 'application/json'},
       body: json.encode({
         'tracking_device_id': trackingId,
@@ -159,22 +195,62 @@ class _PrisonerListPageState extends State<PrisonerListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Prisoner List')),
+      appBar: AppBar(
+        title: Text(
+          'Prisoner List',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.blueGrey,
+      ),
       body: isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? Center(
+        child: CircularProgressIndicator(
+          color: Colors.blueGrey,
+        ),
+      )
           : ListView.builder(
-              itemCount: prisoners.length,
-              itemBuilder: (context, index) {
-                final prisoner = prisoners[index];
-                // print(prisoner);
-                return ListTile(
-                  title: Text(
-                      '${prisoner['first_name']} ${prisoner['last_name']}'),
-                  subtitle: Text('Status: ${prisoner['status']}'),
-                  onTap: () => _selectPrisoner(context, prisoner),
-                );
-              },
+        itemCount: prisoners.length,
+        itemBuilder: (context, index) {
+          final prisoner = prisoners[index];
+          return Card(
+            margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+            elevation: 4,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
             ),
+            child: ListTile(
+              leading: CircleAvatar(
+                backgroundColor: Colors.blueGrey.shade100,
+                child: Icon(
+                  Icons.person,
+                  color: Colors.blueGrey.shade700,
+                ),
+              ),
+              title: Text(
+                '${prisoner['first_name']} ${prisoner['last_name']}',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              subtitle: Text(
+                'Status: ${prisoner['status']}',
+                style: TextStyle(
+                  color: Colors.blueGrey.shade700,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              onTap: () => _selectPrisoner(context, prisoner),
+              trailing: Icon(
+                Icons.arrow_forward_ios,
+                size: 16,
+                color: Colors.blueGrey.shade500,
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
+
 }
